@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест по математика</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .question {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+        .answer {
+            margin: 10px 0;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: lightgreen;
+        }
+        .incorrect {
+            background-color: lightcoral;
+        }
+        #score {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Тест по математика: Цели изрази</h1>
+    <div id="score">Брой точки: 0</div>
+    <div id="question" class="question"></div>
+    <div id="answers"></div>
+    <button id="nextButton" style="display: none;">Следваща задача</button>
+    <button id="endButton" style="display: none;">Край</button>
+
+    <script>
+        const questions = [
+            {
+                question: "Какво е (2x + 3)(x - 1)?",
+                answers: [
+                    { text: "2x^2 + 3x - 2", correct: false },
+                    { text: "2x^2 + x - 3", correct: true },
+                    { text: "2x^2 - 3x + 3", correct: false }
+                ]
+            },
+            {
+                question: "Какво е (x + 2)^2?",
+                answers: [
+                    { text: "x^2 + 4", correct: false },
+                    { text: "x^2 + 4x + 4", correct: true },
+                    { text: "x^2 - 4", correct: false }
+                ]
+            },
+            {
+                question: "Какво е (x + 3)(x - 3)?",
+                answers: [
+                    { text: "x^2 - 9", correct: true },
+                    { text: "x^2 + 9", correct: false },
+                    { text: "x^2 - 6", correct: false }
+                ]
+            },
+            {
+                question: "Какво е 3x(2x + 4)?",
+                answers: [
+                    { text: "6x^2 + 12", correct: true },
+                    { text: "6x^2 + 4", correct: false },
+                    { text: "3x^2 + 4x", correct: false }
+                ]
+            },
+            {
+                question: "Какво е (x - 1)(x + 1)?",
+                answers: [
+                    { text: "x^2 + 1", correct: false },
+                    { text: "x^2 - 1", correct: true },
+                    { text: "x^2 - 2", correct: false }
+                ]
+            },
+            {
+                question: "Какво е (x + 4)(x + 5)?",
+                answers: [
+                    { text: "x^2 + 9x + 20", correct: false },
+                    { text: "x^2 + 9x + 20", correct: true },
+                    { text: "x^2 + 20", correct: false }
+                ]
+            },
+            {
+                question: "Какво е (2x + 5)(x + 3)?",
+                answers: [
+                    { text: "2x^2 + 15x + 15", correct: true },
+                    { text: "2x^2 + 6x + 5", correct: false },
+                    { text: "2x^2 + 5x + 15", correct: false }
+                ]
+            },
+            {
+                question: "Какво е (x - 2)^2?",
+                answers: [
+                    { text: "x^2 - 4", correct: false },
+                    { text: "x^2 - 4x + 4", correct: true },
+                    { text: "x^2 + 4", correct: false }
+                ]
+            },
+            {
+                question: "Какво е 5x(3x - 1)?",
+                answers: [
+                    { text: "15x^2 - 5", correct: true },
+                    { text: "15x^2 + 5", correct: false },
+                    { text: "15x - 5", correct: false }
+                ]
+            },
+            {
+                question: "Какво е (x + 1)(x + 1)?",
+                answers: [
+                    { text: "x^2 + 1", correct: false },
+                    { text: "x^2 + 2x + 1", correct: true },
+                    { text: "x^2 + 2", correct: false }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById('question').innerText = currentQuestion.question;
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = '';
+
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement('div');
+                button.innerText = answer.text;
+                button.classList.add('answer');
+                button.onclick = () => selectAnswer(answer);
+                answersDiv.appendChild(button);
+            });
+
+            document.getElementById('nextButton').style.display = 'none';
+            document.getElementById('endButton').style.display = 'none';
+        }
+
+        function selectAnswer(answer) {
+            const answersDiv = document.getElementById('answers');
+            const answerButtons = answersDiv.getElementsByClassName('answer');
+
+            for (let button of answerButtons) {
+                button.onclick = null; // Деактивирай всички бутони
+            }
+
+            if (answer.correct) {
+                score += 2;
+                answersDiv.querySelectorAll('.answer')[currentQuestionIndex].classList.add('correct');
+            } else {
+                answersDiv.querySelectorAll('.answer')[currentQuestionIndex].classList.add('incorrect');
+            }
+
+            document.getElementById('score').innerText = `Брой точки: ${score}`;
+            document.getElementById('nextButton').style.display = 'inline';
+            if (currentQuestionIndex === questions.length - 1) {
+                document.getElementById('nextButton').style.display = 'none';
+                document.getElementById('endButton').style.display = 'inline';
+            }
+        }
+
+        document.getElementById('nextButton').onclick = () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            }
+        };
+
+        document.getElementById('endButton').onclick = () => {
+            document.body.innerHTML = `<h1>Общ брой точки: ${score}</h1>`;
+            if (score < 10) {
+                document.body.innerHTML += '<p>😞 Опитай пак!</p>';
+            } else if (score < 16) {
+                document.body.innerHTML += '<p>😐 Можеш да се справиш по-добре, вярвам в теб!</p>';
+            } else {
+                document.body.innerHTML += '<p>😀 БРАВО, справяш се чудесно!</p>';
+            }
+        };
+
+        showQuestion();
+    </script>
+</body>
+</html>
